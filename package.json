@@ -1,0 +1,22 @@
+{
+  "name": "trialroster",
+  "version": "0.1.0",
+  "description": "A NodeJS Discord bot to facilitate roster signups in a Discord guild.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --inspect-brk"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mooper60/trialroster.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^11.4.2",
+    "fs": "0.0.1-security"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  }
+}
