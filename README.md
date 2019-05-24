@@ -14,4 +14,5 @@ Running:
     "BOT_CHANNEL_NAME": "bot"
 }
 ```
-5. Run `node .`
+3. Run `npm install`.
+4. Run `node .`
