@@ -5,15 +5,8 @@ const {TOKEN, PREFIX} = require('./config.json')
 
 const bot = new Discord.Client();
 bot.commands = new Discord.Collection();
-
-const applicants = [];
-
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-
-for (const file of commandFiles) {
-	const command = require(`./commands/${file}`);
-	bot.commands.set(command.name, command);
-}
+bot.rosterMap = {};
+bot.trialMap = {};
 
 bot.login(TOKEN);
 
@@ -37,22 +30,34 @@ bot.on('ready', async () => {
 bot.on('message', message => {
 	if(message.author.bot) return;
 
-	//if message is command
-	if(message.contenet.startsWith(PREFIX)) {
-		const args = message.content.slice(PREFIX.length).split(/ +/);
-    	const command = args.shift().toLowerCase();
+	if (message.channel.type === "dm") {
+		//if message is command
+		if(message.content.startsWith(PREFIX)) {
+			let args = message.content.slice(PREFIX.length).split(/ +/);
+			const command = args.shift().toLowerCase();
 
-		if (!bot.commands.has(command)) return;
+			if (!bot.commands.has(command)) return;
 
-		try {
-			bot.commands.get(command).execute(message, args);
-		} catch (error) {
-			console.error(error);
-			message.reply('there was an error trying to execute that command!');
+			try {
+				bot.commands.get(command).execute(message, args);
+			} catch (error) {
+				console.error(error);
+				message.reply('there was an error trying to execute that command!');
+			}
 		}
 	}
 
-	else if (message.channel.type === "dm") {
-		
-	}
 });
+
+
+module.exports = {
+    "bot": bot
+}
+
+
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+	const command = require(`./commands/${file}`);
+	bot.commands.set(command.name, command);
+}

@@ -1,14 +1,17 @@
 const Roster = require("./roster.js");
+const discord = require("discord.js");
+function Trial(user) {
 
-function Trial(userID) {
-
-  let userID = userID;
-  let trialName;
-  let trialTime;
+  let userID = user.id;
+  let userName = "!username"
+  let trialName = "!trialname";
+  let trialTime = "!trialtime";
+  let discordGuildDestination;
   let discordChannelDestination;
-  let discordGroupsToPing = [];
-  let description;
-  let roles = [];
+  let discordGroupsToPing = "!groupsToPing";
+  let description = "!description";
+  let roles = ["!roles", "MT", "OT", "H", "DPS"];
+  let isCancelled = false;
   
   let complete = false;
   let onCompleteListener;
@@ -34,26 +37,38 @@ function Trial(userID) {
       return this;
     },
   
-    setTime : function(time) {
+    withTime : function(time) {
       trialTime = time;
       checkComplete();
       return this;
     },
 
-    setDiscordChannelDestination: function(destinationChannel) {
+    withDiscordChannelDestination: function(destinationChannel) {
       discordChannelDestination = destinationChannel;
       checkComplete();
       return this;
     },
+
+    withDiscordGuildDestination: function(destinationGuild) {
+      discordGuildDestination = destinationGuild;
+      checkComplete();
+      return this;
+    },
   
-    setGroupsToPing : function(groupsToPing) {
+    withGroupsToPing : function(groupsToPing) {
       discordGroupsToPing = groupsToPing;
       checkComplete();
       return this;
     },
   
-    setRoles : function(roleArr) {
+    withRoles : function(roleArr) {
       roles = roleArr;
+      checkComplete();
+      return this;
+    },
+
+    withUsername: function(name) {
+      userName = name;
       checkComplete();
       return this;
     },
@@ -65,11 +80,45 @@ function Trial(userID) {
   
     toRoster : function() {
       if(complete) {
-        return new Roster(trialName, trialTime, description, userID, discordGroupsToPing, roles);
+        return new Roster(trialName, trialTime, description, userID, discordChannelDestination, discordGuildDestination, discordGroupsToPing, roles);
       }
       else {
         throw new Error("Roster not complete");
       }
+    },
+
+    getTitle: function() {
+      return trialName + "-" + trialTime;
+    },
+
+    toString: function() {
+      let roleString = "";
+      roles.forEach(role => roleString += role + ":\n");
+      return userName + "'s Trial: " + trialName + "\n"
+        + discordGroupsToPing + "\n"
+        + description + "\n\n" 
+        + roleString;
+     
+    },
+
+    toRichText: function() {
+      let roleString = "";
+      roles.forEach(role => roleString += role + ":\n");
+
+      return [ discordGroupsToPing, "```css\n" +
+      "[" + trialName + " by " + userName +"]\n" +
+      description + "\n\n" +
+      roleString + 
+      "```"];
+    },
+
+    _getUserName: function() {
+      return userName;
+    },
+    _getDescription: function() {
+      return description;
     }
   }  
 }
+
+module.exports = Trial;
