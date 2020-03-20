@@ -9,7 +9,7 @@ module.exports = {
         let trial = bot.trialMap[message.author.id];
         let rosterMessage = trial.rosterMessage;
 
-        let description = message.content.split(" ").slice(1).join(" ");
+        let description = message.content.split(" ").slice(1);
 
 
 
