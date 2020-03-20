@@ -11,8 +11,6 @@ module.exports = {
 
         let description = message.content.split(" ").slice(1);
 
-
-
         rosterMessage.edit(trial.withDescription(description).toRichText()[1]);
 	},
 };

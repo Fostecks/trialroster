@@ -60,6 +60,12 @@ function Trial(user) {
       checkComplete();
       return this;
     },
+
+    withRoleString : function(roleStr) {
+       roles = parseRoleString(roleStr);
+       checkComplete();
+       return this;
+    },
   
     withRoles : function(roleArr) {
       roles = roleArr;
@@ -119,6 +125,25 @@ function Trial(user) {
       return description;
     }
   }  
+}
+
+parseRoleString = function(roleString) {
+  roleArr = roleString.split(',').map(str => str.trim());
+  let roles = [];
+
+  roleArr.forEach( roleGroup => {
+    if(roleGroup.length >= 3) {
+      if(isNaN(roleGroup[0])) {
+        roles.push(roleGroup);
+      }
+      else if(roleGroup[1] === " ") {
+        let count = roleGroup[0];
+        let role = roleGroup.slice(2);
+        while(count-- >= 0) roles.push(role);
+      }
+
+    }
+  });
 }
 
 module.exports = Trial;
